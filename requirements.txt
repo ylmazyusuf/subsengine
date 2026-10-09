@@ -2,3 +2,4 @@ django
 psycopg[binary]
 django-environ
 djangorestframework
+pytest-django[django]
