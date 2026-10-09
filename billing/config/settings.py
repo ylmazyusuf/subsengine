@@ -16,7 +16,8 @@ from pathlib import Path
 
 env = environ.Env(
     DEBUG=(bool, True),
-    SECRET_KEY=(str, "django-insecure-cieu989wha3h603g=o$u2r#n#y5c5!7qb5_$n7lza5%0spx^^t'")
+    SECRET_KEY=(str, "django-insecure-cieu989wha3h603g=o$u2r#n#y5c5!7qb5_$n7lza5%0spx^^t'"),
+    LOG_LEVEL=(str, "INFO"),
 )
 
 # Set the project base directory
@@ -35,6 +36,8 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
+LOG_LEVEL = env('LOG_LEVEL')
+
 ALLOWED_HOSTS = []
 
 
@@ -47,6 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'core.apps.CoreConfig',
 ]
 
 MIDDLEWARE = [
@@ -83,7 +88,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
 DATABASES = {
-    'default': env.db()
+    'default': env.db(),
+    "OPTIONS": {
+        "timeout": 10,
+    }
 }
 
 
@@ -130,5 +138,35 @@ STATIC_URL = 'static/'
 MAILERS = {
     'default': {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
+    },
+}
+
+# Source - https://stackoverflow.com/a/5806903
+# Posted by Stefano, modified by community. See post 'Timeline' for change history
+# Retrieved 2026-10-09, License - CC BY-SA 4.0
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {name} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        "": {
+            "handlers": ["console"],
+            "level": LOG_LEVEL,
+        },
+        "django": {
+            "level": "WARNING",
+        },
     },
 }
