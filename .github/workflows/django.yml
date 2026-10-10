@@ -1,13 +1,13 @@
-name: Django CI
+name: Python Tests
 
 on:
   push:
-    branches: [ "main", "chore/project-setup" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
 jobs:
-  build:
+  pytest:
 
     runs-on: ubuntu-latest
 
