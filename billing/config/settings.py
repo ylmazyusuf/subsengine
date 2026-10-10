@@ -16,6 +16,7 @@ from pathlib import Path
 
 env = environ.Env(
     DEBUG=(bool, True),
+    DATABASE_URL=(str, "psql://postgres:postgres@127.0.0.1:5432/subsengine"),
     SECRET_KEY=(str, "django-insecure-cieu989wha3h603g=o$u2r#n#y5c5!7qb5_$n7lza5%0spx^^t'"),
     LOG_LEVEL=(str, "INFO"),
 )
