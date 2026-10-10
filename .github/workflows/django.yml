@@ -43,5 +43,6 @@ jobs:
       run: |
         cd billing
         export DATABASE_URL=psql://postgres:postgres@localhost:5432/subsengine
+        export SECRET_KEY=my_secret
         python manage.py migrate
         pytest
