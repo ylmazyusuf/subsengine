@@ -30,7 +30,7 @@ def test_merchant_email_required():
     with pytest.raises(IntegrityError) as excinfo:
         merchant = Merchant()
         merchant.save()
-    assert "violates not-null" in excinfo.value
+    assert "violates check constraint" in str(excinfo.value)
 
 
 @pytest.mark.django_db
@@ -46,7 +46,7 @@ def test_merchant_email_unique():
         merchant_two = Merchant(email=email)
         merchant_two.save()
 
-    assert "violates unique" in excinfo.value
+    assert "violates unique" in str(excinfo.value)
 
 @pytest.mark.django_db
 def test_merchant_email_lower():
@@ -76,4 +76,4 @@ def test_merchant_email_lower_unique():
         merchant = Merchant(email=email_upper_x)
         merchant.save()
 
-    assert "violates unique" in excinfo.value
+    assert "violates unique" in str(excinfo.value)
