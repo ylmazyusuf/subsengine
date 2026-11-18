@@ -10,7 +10,7 @@ class TimeStampModel(models.Model):
 
 
 class Merchant(TimeStampModel):
-    email = fields.EmailField()
+    email = fields.EmailField(unique=True)
     is_active = fields.BooleanField(default=False)
 
     class Meta:
