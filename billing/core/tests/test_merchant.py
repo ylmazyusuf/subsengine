@@ -4,13 +4,6 @@ from core.models import Merchant
 from django.db.utils import IntegrityError
 
 
-@pytest.fixture(scope='function')
-def merchant():
-    merchant = Merchant(email='ali@x.com')
-    merchant.save()
-    yield
-    merchant.delete()
-
 @pytest.mark.django_db
 def test_merchant_is_passive_up_start(merchant):
     """
