@@ -11,9 +11,17 @@ class TimeStampModel(models.Model):
         abstract = True
 
 
+class LowerEmailQuerySet(models.QuerySet):
+    def filter(self, *args, **kwargs):
+        if 'email' in kwargs and isinstance(kwargs['email'], str):
+            kwargs['email'] = kwargs['email'].lower()
+        return super().filter(*args, **kwargs)
+
+
 class Merchant(TimeStampModel):
     email = fields.EmailField(unique=True, )
     is_active = fields.BooleanField(default=False)
+    objects = LowerEmailQuerySet.as_manager()
 
     class Meta:
         constraints = [
