@@ -62,6 +62,19 @@ def test_merchant_email_lower():
     assert merchant_qs.count() == 1
 
 @pytest.mark.django_db
+def test_merchant_email_upper():
+    """
+        `[MER-05]` `ali@x.com` ile kaydedilen email `Ali@x.com` olarak filtrelenebiliyor.
+    """
+    email = 'Ali@x.com'
+    
+    merchant = Merchant(email=email.lower())
+    merchant.save()
+
+    merchant_qs = Merchant.objects.filter(email=email)
+    assert merchant_qs.count() == 1
+
+@pytest.mark.django_db
 def test_merchant_email_lower_unique():
     """
         `[MER-05]` `Ali@x.com` kayıtlıyken `ali@x.com` ile ikinci merchant oluşmuyor
