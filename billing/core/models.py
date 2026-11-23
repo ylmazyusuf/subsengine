@@ -20,7 +20,7 @@ class LowerCaseEmailField(models.EmailField):
 
 
 class Merchant(TimeStampModel):
-    email = LowerCaseEmailField(unique=True, )
+    email = LowerCaseEmailField(unique=True)
     is_active = fields.BooleanField(default=False)
 
     class Meta:
@@ -28,9 +28,5 @@ class Merchant(TimeStampModel):
             models.CheckConstraint(
                 condition=~Q(email=''),
                 name='merchant_email_empty_condition'
-            ),
-            models.UniqueConstraint(
-                Lower('email'),
-                name='merchant_email_lower_unique'
             )
         ]

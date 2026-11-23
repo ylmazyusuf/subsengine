@@ -1,4 +1,6 @@
 import pytest
+import datetime
+import time
 
 from core.models import Merchant
 from django.db.utils import IntegrityError
@@ -18,9 +20,19 @@ def test_merchant_create_update_time(merchant):
     """
     assert merchant.created_at is not None
     assert merchant.updated_at is not None
+
+
+    # bu zamanlar birbirine eşit ufak bir toleransla:
+    machine_tolerance = datetime.timedelta(seconds=0.1)
+    assert machine_tolerance > abs(merchant.updated_at - merchant.created_at)
+    
+    old_updated_at = merchant.updated_at
+
     merchant.is_active = True
     merchant.save()
-    assert merchant.created_at != merchant.updated_at
+
+    # updated at update olmuş mu:
+    assert old_updated_at != merchant.updated_at 
 
 @pytest.mark.django_db
 def test_merchant_email_required():
@@ -39,10 +51,10 @@ def test_merchant_email_unique():
         `[MER-03]` Aynı email ile ikinci bir merchant oluşmuyor
     """
     email = 'ali@x.com'
-    with pytest.raises(IntegrityError) as excinfo:
-        merchant_one = Merchant(email=email)
-        merchant_one.save()
+    merchant_one = Merchant(email=email)
+    merchant_one.save()
 
+    with pytest.raises(IntegrityError) as excinfo:
         merchant_two = Merchant(email=email)
         merchant_two.save()
 
@@ -79,13 +91,15 @@ def test_merchant_email_lower_unique():
     """
         `[MER-05]` `Ali@x.com` kayıtlıyken `ali@x.com` ile ikinci merchant oluşmuyor
     """
-    email_lower_x = 'Ali@x.com'
+
+    email_lower_x = 'ali@x.com'
     email_upper_x = 'Ali@X.com'
+    
+    # Hazırlık aşaması yukarda, burası patlarsa bilmiş olucaz.
+    merchant = Merchant(email=email_lower_x)
+    merchant.save()
 
     with pytest.raises(IntegrityError) as excinfo:
-        merchant = Merchant(email=email_lower_x)
-        merchant.save()
-
         merchant = Merchant(email=email_upper_x)
         merchant.save()
 
